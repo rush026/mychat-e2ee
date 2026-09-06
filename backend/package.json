@@ -1,0 +1,46 @@
+{
+  "name": "mychat-backend",
+  "version": "1.0.0",
+  "description": "E2EE Real-Time Chat Application - Backend",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --forceExit --detectOpenHandles",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "seed:admin": "node src/scripts/seedAdmin.js"
+  },
+  "keywords": [
+    "chat",
+    "e2ee",
+    "encrypted",
+    "real-time",
+    "socket.io"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.21.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.0",
+    "nodemailer": "^6.9.16",
+    "socket.io": "^4.8.1",
+    "uuid": "^10.0.0",
+    "winston": "^3.15.0",
+    "xss": "^1.0.15"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.1.0",
+    "nodemon": "^3.1.7",
+    "supertest": "^7.0.0"
+  }
+}

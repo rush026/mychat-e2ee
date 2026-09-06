@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+/* ─── Custom Design System ─────────────────────────────────────────── */
+
+@theme {
+  /* Brand Colors */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+
+  --color-accent-400: #c084fc;
+  --color-accent-500: #a855f7;
+  --color-accent-600: #9333ea;
+
+  /* Dark theme surface colors */
+  --color-surface-900: #0a0a0f;
+  --color-surface-800: #111118;
+  --color-surface-700: #1a1a24;
+  --color-surface-600: #232330;
+  --color-surface-500: #2d2d3d;
+  --color-surface-400: #3a3a4d;
+  --color-surface-300: #4a4a5e;
+
+  /* Semantic colors */
+  --color-success-500: #22c55e;
+  --color-warning-500: #f59e0b;
+  --color-danger-500: #ef4444;
+  --color-info-500: #3b82f6;
+
+  /* Encryption badge */
+  --color-encrypted: #10b981;
+
+  /* Gradients */
+  --gradient-brand: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+  --gradient-surface: linear-gradient(180deg, #111118 0%, #0a0a0f 100%);
+  --gradient-card: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Shadows */
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(99, 102, 241, 0.2);
+
+  /* Animations */
+  --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-down: slide-down 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-scale-in: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-bounce-in: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --animate-typing: typing 1.4s infinite;
+}
+
+/* ─── Keyframe Animations ──────────────────────────────────────────── */
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes bounce-in {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes typing {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Base Styles ──────────────────────────────────────────────────── */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-surface-400) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface-400);
+  border-radius: 3px;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-surface-900);
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+/* ─── Glassmorphism Utilities ──────────────────────────────────────── */
+
+.glass {
+  background: rgba(17, 17, 24, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 26, 36, 0.8) 0%,
+    rgba(17, 17, 24, 0.9) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glass-input {
+  background: rgba(26, 26, 36, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  outline: none;
+}
+
+/* ─── Gradient Text ────────────────────────────────────────────────── */
+
+.gradient-text {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Button hover glow ────────────────────────────────────────────── */
+
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: var(--gradient-brand);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(8px);
+}
+
+.btn-glow:hover::before {
+  opacity: 0.6;
+}
+
+/* ─── Message bubbles ──────────────────────────────────────────────── */
+
+.msg-sent {
+  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-accent-600) 100%);
+  border-radius: 18px 18px 4px 18px;
+}
+
+.msg-received {
+  background: var(--color-surface-600);
+  border-radius: 18px 18px 18px 4px;
+}
+
+/* ─── Presence dot ─────────────────────────────────────────────────── */
+
+.online-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--color-success-500);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-success-500);
+}
+
+.offline-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--color-surface-400);
+  border-radius: 50%;
+}
+
+/* ─── Skeleton loading ─────────────────────────────────────────────── */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-700) 25%,
+    var(--color-surface-600) 50%,
+    var(--color-surface-700) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: 8px;
+}
