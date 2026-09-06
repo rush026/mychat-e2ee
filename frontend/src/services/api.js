@@ -9,7 +9,7 @@ import { useAuthStore } from '../store/authStore';
  * - Response interceptor for automatic token refresh on 401
  */
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

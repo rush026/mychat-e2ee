@@ -11,7 +11,9 @@ let socket = null;
 export const connectSocket = (accessToken) => {
   if (socket?.connected) return socket;
 
-  socket = io({
+  const socketUrl = import.meta.env.VITE_SOCKET_URL || '';
+
+  socket = io(socketUrl, {
     auth: { token: accessToken },
     reconnection: true,
     reconnectionAttempts: 10,
