@@ -99,6 +99,9 @@ export const googleLogin = async (req, res, next) => {
       })
     );
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      console.error('Validation Error Details:', error.errors);
+    }
     next(error);
   }
 };

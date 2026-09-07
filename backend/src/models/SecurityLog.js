@@ -19,6 +19,7 @@ const securityLogSchema = new mongoose.Schema(
       enum: [
         'login_success',
         'login_failure',
+        'google_login',
         'logout',
         'register',
         'password_reset_request',
