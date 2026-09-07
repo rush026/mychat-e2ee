@@ -11,11 +11,103 @@ import {
 } from './token.service.js';
 import { sendVerificationEmail, sendPasswordResetEmail } from './email.service.js';
 import { logger } from '../utils/logger.js';
+import { OAuth2Client } from 'google-auth-library';
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /**
  * Authentication service — handles all auth business logic.
  * Controllers delegate to this service for clean separation of concerns.
  */
+
+/**
+ * Google OAuth login/register.
+ * Verifies Google ID token, creates user if new, returns JWT tokens.
+ */
+export const googleLogin = async (credential, { userAgent, ipAddress }) => {
+  // Verify the Google ID token server-side
+  let ticket;
+  try {
+    ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+  } catch (error) {
+    logger.error('Google token verification failed:', { error: error.message });
+    throw ApiError.unauthorized('Invalid Google token', 'GOOGLE_TOKEN_INVALID');
+  }
+
+  const payload = ticket.getPayload();
+  const { sub: googleId, email, name, picture } = payload;
+
+  if (!email) {
+    throw ApiError.badRequest('Google account must have an email', 'GOOGLE_NO_EMAIL');
+  }
+
+  // Find existing user by googleId or email
+  let user = await User.findOne({
+    $or: [
+      { googleId },
+      { email: email.toLowerCase() },
+    ],
+  });
+
+  if (user) {
+    // Link Google account if user exists but doesn't have googleId
+    if (!user.googleId) {
+      user.googleId = googleId;
+      if (picture && !user.avatar) user.avatar = picture;
+    }
+    user.isOnline = true;
+    user.lastSeen = new Date();
+    user.emailVerified = true; // Google accounts are verified
+    await user.save();
+  } else {
+    // Create new user from Google profile
+    const baseUsername = email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
+    let username = baseUsername;
+    let counter = 1;
+    
+    // Ensure unique username
+    while (await User.findOne({ normalizedUsername: username.toLowerCase() })) {
+      username = `${baseUsername}${counter}`;
+      counter++;
+    }
+
+    user = await User.create({
+      username,
+      email: email.toLowerCase(),
+      displayName: name || username,
+      avatar: picture || '',
+      googleId,
+      emailVerified: true,
+      isOnline: true,
+      lastSeen: new Date(),
+      // No password for Google users — they authenticate via Google
+      passwordHash: `google_oauth_${googleId}_${Date.now()}`,
+    });
+  }
+
+  // Generate JWT tokens
+  const accessToken = generateAccessToken(user);
+  const refreshToken = await generateRefreshToken(user._id, userAgent, ipAddress);
+
+  // Log the login
+  await SecurityLog.create({
+    userId: user._id,
+    action: 'google_login',
+    ipAddress,
+    userAgent,
+    success: true,
+    metadata: { provider: 'google' },
+  });
+
+  return {
+    user: sanitizeUser(user),
+    accessToken,
+    refreshToken,
+  };
+};
 
 /**
  * Register a new user.

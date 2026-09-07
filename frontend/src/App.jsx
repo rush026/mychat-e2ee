@@ -4,7 +4,6 @@ import { useAuthStore } from './store/authStore';
 
 // Pages
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
@@ -40,7 +39,7 @@ export default function App() {
         />
         <Route
           path="/register"
-          element={isAuthenticated ? <Navigate to="/chat" replace /> : <RegisterPage />}
+          element={isAuthenticated ? <Navigate to="/chat" replace /> : <LoginPage />}
         />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />

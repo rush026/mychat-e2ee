@@ -28,8 +28,14 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: {
       type: String,
-      required: [true, 'Password is required'],
+      required: false, // Not required for Google OAuth users
       select: false, // Never return in queries by default
+    },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true, // Allow null — only Google users have this
+      index: true,
     },
     displayName: {
       type: String,

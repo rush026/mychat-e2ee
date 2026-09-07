@@ -75,6 +75,35 @@ export const login = async (req, res, next) => {
 };
 
 /**
+ * POST /api/auth/google
+ */
+export const googleLogin = async (req, res, next) => {
+  try {
+    const { credential } = req.body;
+    const meta = getClientMeta(req);
+
+    if (!credential) {
+      return res.status(400).json(
+        ApiResponse.error('Google credential is required')
+      );
+    }
+
+    const result = await authService.googleLogin(credential, meta);
+
+    res.cookie('refreshToken', result.refreshToken, REFRESH_COOKIE_OPTIONS);
+
+    res.json(
+      ApiResponse.success('Google login successful', {
+        user: result.user,
+        accessToken: result.accessToken,
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * POST /api/auth/logout
  */
 export const logout = async (req, res, next) => {

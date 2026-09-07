@@ -62,6 +62,28 @@ export const useAuthStore = create((set, get) => ({
   },
 
   /**
+   * Login with Google OAuth.
+   */
+  googleLogin: async ({ credential }) => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data } = await authService.googleLogin({ credential });
+      set({
+        user: data.data.user,
+        accessToken: data.data.accessToken,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      });
+      return data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Google login failed';
+      set({ isLoading: false, error: message });
+      throw error;
+    }
+  },
+
+  /**
    * Logout — clear state and revoke refresh token.
    */
   logout: async () => {
