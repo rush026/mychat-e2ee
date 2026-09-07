@@ -13,19 +13,27 @@ const connectDB = async () => {
     process.exit(1);
   }
 
+  // Log masked URI for debugging (show host, hide credentials)
+  const maskedUri = MONGO_URI.replace(
+    /\/\/([^:]+):([^@]+)@/,
+    '//$1:****@'
+  );
+  logger.info(`Connecting to MongoDB: ${maskedUri}`);
+
   try {
     const conn = await mongoose.connect(MONGO_URI, {
-      // Modern Mongoose 8+ uses these defaults, but we're explicit:
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 15000, // Increased for cloud deployments
       socketTimeoutMS: 45000,
+      connectTimeoutMS: 15000,
+      retryWrites: true,
     });
 
     logger.info(`MongoDB connected: ${conn.connection.host}`);
 
     // Handle connection events
     mongoose.connection.on('error', (err) => {
-      logger.error('MongoDB connection error:', err);
+      logger.error(`MongoDB connection error: ${err.message}`);
     });
 
     mongoose.connection.on('disconnected', () => {
@@ -37,7 +45,10 @@ const connectDB = async () => {
     });
 
   } catch (error) {
-    logger.error('MongoDB connection failed:', error.message);
+    logger.error(`MongoDB connection failed: ${error.message}`);
+    if (error.reason) {
+      logger.error(`Reason: ${JSON.stringify(error.reason)}`);
+    }
     process.exit(1);
   }
 };

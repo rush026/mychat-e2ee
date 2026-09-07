@@ -76,8 +76,6 @@ const messageSchema = new mongoose.Schema(
 
 // Compound index for paginated message retrieval within a conversation
 messageSchema.index({ conversationId: 1, createdAt: -1 });
-// Index for deduplication by clientMessageId
-messageSchema.index({ clientMessageId: 1 }, { unique: true });
 // Index for unread message queries
 messageSchema.index({ conversationId: 1, senderId: 1, status: 1 });
 
